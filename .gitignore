@@ -1,0 +1,7 @@
+sample_mazes
+
+cmake-build-debug
+
+*.txt
+
+.idea

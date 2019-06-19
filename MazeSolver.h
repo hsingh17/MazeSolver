@@ -11,7 +11,7 @@ class MazeSolver {
  private:
   Maze& m;
   bool found_end = false;
-  std::vector<std::pair<int, int>> visited;
+  // std::vector<std::pair<int, int>> visited;
 
   void SolveMaze(std::pair<int, int> v);
   bool Visited(std::pair<int, int> v);
