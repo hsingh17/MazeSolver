@@ -9,7 +9,7 @@ Maze::Maze(char* file_path) {
 
   // Resize the maze accordingly
   file >> row >> col;
-  maze.resize(row, std::vector<char>(col));
+  maze.resize(row, std::vector<Node>(col));
 
   // If row or col is not an int
   if (file.fail()) {
@@ -24,14 +24,15 @@ Maze::Maze(char* file_path) {
   for (int i = 0; i < Row(); i++) {
     for (int j = 0; j < Col(); j++) {
        file >> c;
+       Node node(i, j, c);
        if (c == 'S') {
          is_start = true;
-         start = std::make_pair(i, j);
+         start = std::make_pair(i ,j);
        } else if (c == 'F') {
          is_finish = true;
          end = std::make_pair(i, j);
        }
-       maze[i][j] = c;
+      maze[i][j] = node;
     }
   }
 
@@ -42,14 +43,14 @@ Maze::Maze(char* file_path) {
   }
 }
 
-const std::vector<std::vector<char>>& Maze::GetMaze() const {
+const std::vector<std::vector<Node>>& Maze::GetMaze() const {
   return maze;
 }
-const std::pair<int, int> Maze::Start() const {
-  return start;
+Node& Maze::Start() {
+  return maze[start.first][start.second];
 }
-const std::pair<int, int> Maze::End() const {
-  return end;
+Node& Maze::End() {
+  return maze[end.first][end.second];
 }
 
 const size_t Maze::Col() const {
@@ -60,31 +61,31 @@ const size_t Maze::Row() const {
   return row;
 }
 
-const std::vector<std::pair<int, int>> Maze::Adj(const std::pair<int, int>& v) const {
+std::vector<Node> Maze::Adj(const Node& v) const {
   // Get the spots adjacent to v.
   // In this implementation, diagonal paths are not allowed
-  std::vector<std::pair<int, int>> adj;
-  int north = v.first - 1, east = v.second + 1, south = v.first + 1, west = v.second - 1;
+  std::vector<Node> adj;
+  int north = v.GetX() - 1, east = v.GetY() + 1, south = v.GetX() + 1, west = v.GetY() - 1;
 
   // Check NESW directions to see if space can be moved onto
-  if (north >= 0 && maze[north][v.second] != '+')
-    adj.emplace_back(north, v.second);
+  if (north >= 0 && maze[north][v.GetY()].GetPiece() != '+')
+    adj.emplace_back(maze[north][v.GetY()]);
 
-  if (east < Col() && maze[v.first][east] != '+')
-    adj.emplace_back(v.first, east);
+  if (east < Col() && maze[v.GetX()][east].GetPiece() != '+')
+    adj.emplace_back(maze[v.GetX()][east]);
 
-  if (south < Row() && maze[south][v.second] != '+')
-    adj.emplace_back(south, v.second);
+  if (south < Row() && maze[south][v.GetY()].GetPiece() != '+')
+    adj.emplace_back(maze[south][v.GetY()]);
 
-  if (west >= 0 && maze[v.first][west] != '+')
-    adj.emplace_back(v.first, west);
+  if (west >= 0 && maze[v.GetX()][west].GetPiece() != '+')
+    adj.emplace_back(maze[v.GetX()][west]);
 
   return adj;
 }
 
-char& Maze::At(const std::pair<int, int>& v) {
-  return maze[v.first][v.second];
-}
+//char& Maze::At(const std::pair<int, int>& v) {
+//  return maze[v.first][v.second];
+//}
 
 void Maze::UpdateMaze(const char* new_file) {
   // Check if file already exists
@@ -98,9 +99,10 @@ void Maze::UpdateMaze(const char* new_file) {
   std::ofstream solution(new_file);
 
   // Update the maze to show the final path
+
   for (int i = 0; i < Row(); i++) {
     for (int j = 0; j < Col(); j++)
-      solution << At(std::make_pair(i, j));
+      solution << maze[i][j].GetPiece();
     solution << '\n';
   }
 

@@ -2,6 +2,8 @@
 #define MAZESOLVER_MAZESOLVER_H
 #include "Maze.h"
 #include <vector>
+#include <queue>
+#include <unordered_set>
 
 class MazeSolver {
  public:
@@ -11,10 +13,11 @@ class MazeSolver {
  private:
   Maze& m;
   bool found_end = false;
-  // std::vector<std::pair<int, int>> visited;
+  std::deque<Node> open;
+  std::vector<Node> closed;
 
-  void SolveMaze(std::pair<int, int> v);
-  bool Visited(std::pair<int, int> v);
-
+  void SolveMaze(Node start);
+  bool InOpen(Node& node);
+  bool InClosed(Node& node);
 };
 #endif //MAZESOLVER_MAZESOLVER_H
