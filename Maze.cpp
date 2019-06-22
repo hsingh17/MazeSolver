@@ -61,24 +61,26 @@ const size_t Maze::Row() const {
   return row;
 }
 
-std::vector<Node> Maze::Adj(const Node& v) const {
+std::vector<Node> Maze::Adj(Node& v) {
   // Get the spots adjacent to v.
   // In this implementation, diagonal paths are not allowed
   std::vector<Node> adj;
+
   int north = v.GetX() - 1, east = v.GetY() + 1, south = v.GetX() + 1, west = v.GetY() - 1;
 
   // Check NESW directions to see if space can be moved onto
   if (north >= 0 && maze[north][v.GetY()].GetPiece() != '+')
-    adj.emplace_back(maze[north][v.GetY()]);
+    adj.push_back(maze[north][v.GetY()]);
+
 
   if (east < Col() && maze[v.GetX()][east].GetPiece() != '+')
-    adj.emplace_back(maze[v.GetX()][east]);
+    adj.push_back(maze[v.GetX()][east]);
 
   if (south < Row() && maze[south][v.GetY()].GetPiece() != '+')
-    adj.emplace_back(maze[south][v.GetY()]);
+    adj.push_back(maze[south][v.GetY()]);
 
   if (west >= 0 && maze[v.GetX()][west].GetPiece() != '+')
-    adj.emplace_back(maze[v.GetX()][west]);
+    adj.push_back(maze[v.GetX()][west]);
 
   return adj;
 }
@@ -98,8 +100,10 @@ void Maze::UpdateMaze(const char* new_file) {
   // Create solutions file
   std::ofstream solution(new_file);
 
-  // Update the maze to show the final path
 
+
+
+  // Update the maze to show the final path
   for (int i = 0; i < Row(); i++) {
     for (int j = 0; j < Col(); j++)
       solution << maze[i][j].GetPiece();
@@ -112,5 +116,9 @@ void Maze::UpdateMaze(const char* new_file) {
 bool Maze::FileExists(const char *file) {
   std::ifstream ifile(file);
   return ifile.good();
+}
+
+Node& Maze::operator()(int x, int y) {
+  return maze[x][y];
 }
 

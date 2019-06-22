@@ -15,9 +15,12 @@ class MazeSolver {
   bool found_end = false;
   std::deque<Node> open;
   std::vector<Node> closed;
+  std::vector<Node> path;
 
-  void SolveMaze(Node start);
+  void SolveMaze(Node& start);
   bool InOpen(Node& node);
   bool InClosed(Node& node);
+  bool InPath(Node& node);
+  void BuildPath();
 };
 #endif //MAZESOLVER_MAZESOLVER_H
