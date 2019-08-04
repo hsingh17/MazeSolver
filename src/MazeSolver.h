@@ -20,7 +20,6 @@ class MazeSolver {
   void SolveMaze(Node& start);
   bool InOpen(Node& node);
   bool InClosed(Node& node);
-  bool InPath(Node& node);
-  void BuildPath();
+  void BuildPath(Node node);
 };
 #endif //MAZESOLVER_MAZESOLVER_H

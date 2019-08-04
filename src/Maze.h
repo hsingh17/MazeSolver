@@ -15,7 +15,6 @@ class Maze {
   const size_t Col() const;
   Node& Start();
   Node& End();
-  //char& At(const std::pair<int, int>& v);
 
   void UpdateMaze(const char* new_file);
 

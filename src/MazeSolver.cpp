@@ -4,32 +4,9 @@
 
 MazeSolver::MazeSolver(Maze& m) : m(m) {
   SolveMaze(m.Start());
-  BuildPath();
+  BuildPath(m(m.End().GetPrev().first, m.End().GetPrev().second));
 }
 void MazeSolver::SolveMaze(Node& start) {
-  // Base case
-//  if (v == m.End()) {
-//    found_end = true;
-//    return;
-//  }
-//
-//  visited.push_back(v);
-//  // Loop through valid adjacent spots
-//  for (const auto& w : m.Adj(v)) {
-//    if (!Visited(w)) {
-//      SolveMaze(w);
-//      // 7 = Final path to end
-//      if (found_end && w != m.End()) {
-//        //m.At(w) = 7;
-//        m.At(w) = '@';
-//        return;
-//      }
-//    }
-//  }
-
-
-  // Distance from start to itself is 0.
-  // So g_cost is 0
   start.SetG(0);
 
   // Calculate h_cost of start. h_cost = f_cost since g_cost = 0
@@ -40,51 +17,47 @@ void MazeSolver::SolveMaze(Node& start) {
   while(!open.empty()) {
     std::sort(open.begin(), open.end());
     closed.push_back(open.front());
-    Node cur_node = open.front();
+    Node& cur_node = open.front();
     open.pop_front();
-    for (Node copy_node : m.Adj(cur_node)) {
-      Node& ref_node = m(copy_node.GetX(), copy_node.GetY());
-      if (!InClosed(ref_node) && !InOpen(ref_node)) {
-        open.push_back(ref_node);
-        int g_cost_x = abs(ref_node.GetX() - m.Start().GetX());
-        int g_cost_y = abs(ref_node.GetY() - m.Start().GetY());
-        ref_node.SetG(g_cost_x + g_cost_y);
 
-        int h_cost_x = abs(ref_node.GetX() - m.End().GetX());
-        int h_cost_y = abs(ref_node.GetY() - m.End().GetY());
-        ref_node.SetH(h_cost_x + h_cost_y);
+    // Check if we have found the end
+    if (cur_node == m.End())
+      found_end = true;
 
-        int f_cost = ref_node.GetG() + ref_node.GetH();
+    for (Node& copy : m.Adj(cur_node)) {
+      Node& adj_node = m(copy.GetX(), copy.GetY());
+      if (!InClosed(adj_node) && !InOpen(adj_node)) {
+        open.push_back(adj_node);
 
-        if (f_cost < ref_node.GetF()){
-          ref_node.SetF(f_cost);
-          ref_node.SetPrev(cur_node.GetX(), cur_node.GetY());
+        // Calculate cost from going from current node to start
+        int g_cost_x = abs(adj_node.GetX() - m.Start().GetX());
+        int g_cost_y = abs(adj_node.GetY() - m.Start().GetY());
+        adj_node.SetG(g_cost_x + g_cost_y);
+
+        // Calculate cost from going from current node to end
+        int h_cost_x = abs(adj_node.GetX() - m.End().GetX());
+        int h_cost_y = abs(adj_node.GetY() - m.End().GetY());
+        adj_node.SetH(h_cost_x + h_cost_y);
+
+        // F cost is the total cost
+        int f_cost = adj_node.GetG() + adj_node.GetH();
+
+        // If the current F cost is less than the node's current f cost
+        // We must change it
+        if (f_cost < adj_node.GetF()){
+          adj_node.SetF(f_cost);
+          adj_node.SetPrev(cur_node.GetX(), cur_node.GetY());
         }
       }
     }
   }
-
-
 }
 
-void MazeSolver::BuildPath() {
-//  auto cur_node = start;
-//  while (!(cur_node == m.Start())) {
-//    path.push_back(cur_node);
-//    auto adj = m.Adj(cur_node);
-//    std::sort(adj.begin(), adj.end());
-//    for (auto& node : adj)
-//      if (!InPath(node)) {
-//        cur_node = node;
-//        break;
-//      }
-//    m(cur_node.GetX(), cur_node.GetY()).SetPiece('@');
-//  }
-  Node& cur_node = m.End();
-  while (cur_node.GetPrev() != std::make_pair(-1, -1)) {
-    m(cur_node.GetX(), cur_node.GetY()).SetPiece('@');
-    cur_node = m(cur_node.GetPrev().first, cur_node.GetPrev().second);
-  }
+void MazeSolver::BuildPath(Node node) {
+  do {
+    m(node.GetX(), node.GetY()).SetPiece('@');
+    node = m(node.GetPrev().first, node.GetPrev().second);
+  } while (node.GetPrev() != std::make_pair(-1, -1));
 }
 
 bool MazeSolver::Possible() {
@@ -98,12 +71,4 @@ bool MazeSolver::InOpen(Node& node) {
 
 bool MazeSolver::InClosed(Node& node) {
   return std::find(closed.begin(), closed.end(), node) != closed.end();
-}
-
-//std::vector<Node> MazeSolver::GetPath() {
-//  return path;
-//}
-
-bool MazeSolver::InPath(Node& node) {
-  return std::find(path.begin(), path.end(), node) != path.end();
 }

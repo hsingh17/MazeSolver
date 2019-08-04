@@ -41,6 +41,8 @@ Maze::Maze(char* file_path) {
     std::cerr << "No start/finish! Please give a start/finish" << std::endl;
     exit(1);
   }
+
+  file.close();
 }
 
 const std::vector<std::vector<Node>>& Maze::GetMaze() const {
@@ -85,10 +87,6 @@ std::vector<Node> Maze::Adj(Node& v) {
   return adj;
 }
 
-//char& Maze::At(const std::pair<int, int>& v) {
-//  return maze[v.first][v.second];
-//}
-
 void Maze::UpdateMaze(const char* new_file) {
   // Check if file already exists
   if (FileExists(new_file)) {
@@ -100,9 +98,6 @@ void Maze::UpdateMaze(const char* new_file) {
   // Create solutions file
   std::ofstream solution(new_file);
 
-
-
-
   // Update the maze to show the final path
   for (int i = 0; i < Row(); i++) {
     for (int j = 0; j < Col(); j++)
@@ -113,7 +108,7 @@ void Maze::UpdateMaze(const char* new_file) {
   solution.close();
 }
 
-bool Maze::FileExists(const char *file) {
+bool Maze::FileExists(const char* file) {
   std::ifstream ifile(file);
   return ifile.good();
 }
