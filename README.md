@@ -21,5 +21,5 @@ I have included 5 sample mazes in the `sample_mazes` folder in the GitHub projec
 
 `cat 4.txt`
 
-![](file://screenshots/maze_4_screenshot.JPG)
+![](./screenshots/file://maze_4_screenshot.JPG)
 
