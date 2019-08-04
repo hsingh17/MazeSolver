@@ -23,3 +23,32 @@ I have included 5 sample mazes in the `sample_mazes` folder in the GitHub projec
 
 ![maze 4](https://i.imgur.com/gO5hRw0.jpg)
 
+Now lets run the maze solver on the maze. 
+
+`./maze_solver 4.txt maze_4_sol`
+
+Now lets take a look at the solution.
+
+`cat maze_4_sol`
+
+![maze4sol](https://i.imgur.com/gNIOPN2.jpg)
+
+The `@` represent the shortest path between the start and finish.
+
+# Making your own maze!
+If you have run all the sample mazes, and instead want to create your own maze make sure to adhere to the following guidelines:
+
+1. First row of your maze should always be the number of rows.
+2. Second row of your maze should always be the number of columns.
+3. `+` indicates an impassable wall
+4. `.` indicates a spot that can be moved onto
+5. `S` is the start
+6. `F` is the finish
+
+If no start or finish is provided, or the finish is unreachable, an approriate error message will be provided.
+
+# Contributing/Errors
+If you happen to stumble upon this project and want to contribute, please feel free I have much to learn. However, also tell me of any errors/bugs you may find.
+
+*Project by Harjot Singh*
+
