@@ -55,11 +55,11 @@ Node& Maze::End() {
   return maze[end.first][end.second];
 }
 
-const size_t Maze::Col() const {
+const int Maze::Col() const {
   return col;
 }
 
-const size_t Maze::Row() const {
+const int Maze::Row() const {
   return row;
 }
 

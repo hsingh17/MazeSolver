@@ -11,8 +11,8 @@ class Maze {
   const std::vector<std::vector<Node>>& GetMaze() const;
   std::vector<Node> Adj(Node& v);
 
-  const size_t Row() const;
-  const size_t Col() const;
+  const int Row() const;
+  const int Col() const;
   Node& Start();
   Node& End();
 

@@ -2,7 +2,7 @@
 
 Node::Node(int x, int y, char piece) : x(x), y(y), piece(piece) {}
 
-Node::Node(const Node& rhs) : x(rhs.x), y(rhs.y), piece(rhs.piece), g_cost{rhs.g_cost}, h_cost(rhs.h_cost), f_cost(rhs.f_cost), prev(rhs.prev) {}
+Node::Node(const Node& rhs) : x(rhs.x), y(rhs.y), g_cost{rhs.g_cost}, h_cost(rhs.h_cost), f_cost(rhs.f_cost), prev(rhs.prev), piece(rhs.piece) {}
 
 const int& Node::GetG() const {
   return g_cost;
